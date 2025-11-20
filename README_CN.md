@@ -18,14 +18,22 @@
 
 ### 用法
 
-#### 1. 输入用于授权的 databaseURI。目前支持 `mysql`、`postgresql`、`sqlite`、`sqlserver`、`oracle`，示例格式如下：
+#### 1. 输入用于授权的 databaseURI。目前支持 `mysql`、`postgresql`、`sqlite`、`sqlserver`、`oracle`、`clickhouse`，示例格式如下：
 ```shell
 mysql+pymysql://root:123456@localhost:3306/test
 postgresql+psycopg2://postgres:123456@localhost:5432/test
 sqlite:///test.db
 mssql+pymssql://<username>:<password>@<freetds_name>/?charset=utf8
 oracle+oracledb://user:pass@hostname:port[/dbname][?service_name=<service>[&key=value&key=value...]]
+clickhouse://default:password@localhost:8123/default
+clickhouse+connect://default:password@localhost:8123/mydatabase
 ```
+
+**ClickHouse/MyScale 特别说明：**
+- 支持 ClickHouse 和 MyScale（基于 ClickHouse 的向量数据库）
+- 使用 `clickhouse-connect` Python 驱动
+- 默认端口：8123（HTTP）、9000（Native）
+- MyScale 是一个兼容 ClickHouse 的向量数据库，支持向量相似性搜索功能
 
 > **注意：** 此插件总是在 Docker 中运行，因此 `localhost` 始终指 Docker 内部网络，请尝试使用 `host.docker.internal` 代替。
 
@@ -55,7 +63,37 @@ URL 请求格式示例：
 curl -X POST 'https://daemon-plugin.dify.dev/o3wvwZfYFLU5iGopr5CxYmGaM5mWV7xf/sql' -H 'Content-Type: application/json' -d '{"query":"select * from test", "format": "md"}'
 ```
 
+#### 7. 如何打包plugin。
+
+Step 1：install homebrew-dify
+```shell
+brew install langgenius/dify/dify
+```
+
+Step 2：install Dify cli
+```shell
+brew tap langgenius/dify
+brew install dify
+```
+
+Step 3: 验证dify 安装
+```shell
+dify --version
+```
+
+Step 4：package Dify database plugin
+```shell
+dify plugin package ./dify-plugin-database
+```
+
 ### 更新日志
+
+#### 0.0.7
+1. 新增 ClickHouse/MyScale 数据库支持
+2. 使用 clickhouse-connect 0.10.0+ 驱动
+3. 支持所有现有的输出格式（JSON、CSV、YAML、XLSX、HTML、Markdown）
+4. 支持表结构获取，包括 ClickHouse 特有的引擎、排序键、分区键等信息
+5. 完全兼容 MyScale 向量数据库
 
 #### 0.0.6
 1. 支持在 `get table schema` 工具中获取更多信息，例如表和字段的注释、外键关联索引等
