@@ -63,6 +63,29 @@ URL 请求格式示例：
 curl -X POST 'https://daemon-plugin.dify.dev/o3wvwZfYFLU5iGopr5CxYmGaM5mWV7xf/sql' -H 'Content-Type: application/json' -d '{"query":"select * from test", "format": "md"}'
 ```
 
+#### 7. 如何打包plugin。
+
+Step 1：install homebrew-dify
+```shell
+brew install langgenius/dify/dify
+```
+
+Step 2：install Dify cli
+```shell
+brew tap langgenius/dify
+brew install dify
+```
+
+Step 3: 验证dify 安装
+```shell
+dify --version
+```
+
+Step 4：package Dify database plugin
+```shell
+dify plugin package ./dify-plugin-database
+```
+
 ### 更新日志
 
 #### 0.0.7
